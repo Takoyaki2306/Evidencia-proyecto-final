@@ -6,6 +6,7 @@ import time
 
 food = vector(0, 0)
 snake = [vector(10, 0)]
+super_food = vector(1000, 1000)
 aim = vector(0, -10)
 start_time = time.time()
 
@@ -26,12 +27,22 @@ def change(x, y):
     """Change snake direction."""
     aim.x = x
     aim.y = y
+    
+def spawn_super_food():
+    """Hace aparecer la súper comida en un lugar aleatorio."""
+    super_food.x = randrange(-15, 15) * 10
+    super_food.y = randrange(-15, 15) * 10
+    ontimer(despawn_super_food, 4000) 
+    ontimer(spawn_super_food, 12000)  
 
+def despawn_super_food():
+    """Esconde la súper comida (la manda fuera del tablero)."""
+    super_food.x = 1000
+    super_food.y = 1000
 
 def inside(head):
     """Return True if head inside boundaries."""
     return -200 < head.x < 190 and -200 < head.y < 190
-
 
 def move():
     """Move snake forward one segment."""
@@ -61,6 +72,11 @@ def move():
             food.y = randrange(-15, 15) * 10
             if food not in obstacles and food not in snake:
                 break
+    elif head == super_food:
+        print('Snake comió SUPER comida! Largo:', len(snake) + 2)
+        despawn_super_food()  
+        snake.append(snake[-1].copy())  
+
     else:
         snake.pop(0)
 
@@ -70,6 +86,8 @@ def move():
         square(body.x, body.y, 9, 'black')
 
     square(food.x, food.y, 9, 'green')
+
+    square(super_food.x, super_food.y, 9, 'yellow')
 
     #definir el color del obstaculo
     for obs in obstacles:
@@ -116,8 +134,10 @@ onkey(lambda: change(10, 0), 'Right')
 onkey(lambda: change(-10, 0), 'Left')
 onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
+spawn_super_food()
 move()
 done()
+
 
 
 
