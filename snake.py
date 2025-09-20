@@ -1,15 +1,26 @@
-
-from random import randrange
+from random import randrange, choice
 from turtle import *
 from freegames import square, vector
 import time
+#el random es necesario para los colores
+import random
 
+#opciones de color para la fruta y la serpiente
+body_colors = ('black', 'brown', 'orange', 'green', 'violet')
 food = vector(0, 0)
 snake = [vector(10, 0)]
+
 #añadimos la fruta extra al juego
 super_food = vector(1000, 1000)
 aim = vector(0, -10)
 start_time = time.time()
+
+#Color final aleatorio de la fruta y la serpiente (será diferente cada que se empieza una partida)
+snake_color = random.choice(body_colors)
+fruit_color = random.choice(body_colors)
+
+#velocidad inicial de la serpiente
+snake_speed = 150
 
 # Definir la variable de los obstaculos
 obstacles = []
@@ -28,7 +39,18 @@ def change(x, y):
     """Change snake direction."""
     aim.x = x
     aim.y = y
-    
+
+#función que hace que la fruta se mueva una casilla cada cierto tiempo
+def move_food():
+    directions = [vector(10, 0), vector(-10, 0), vector(0, 10), vector(0, -10)]
+    step = choice(directions)
+    new_food = food.copy()
+    new_food.move(step)
+
+    if inside(new_food):
+        food.move(step)
+    ontimer(move_food, 5000)
+
 def spawn_super_food():
     #Hace aparecer la súper comida en un lugar aleatorio.
     super_food.x = randrange(-15, 15) * 10
@@ -47,6 +69,7 @@ def inside(head):
 
 def move():
     """Move snake forward one segment."""
+    global snake_speed
     head = snake[-1].copy()
     head.move(aim)
     
@@ -70,9 +93,14 @@ def move():
         print('Snake:', len(snake))
         while True:
             food.x = randrange(-15, 15) * 10
-            food.y = randrange(-15, 15) * 10
+            food.y = randrange(-15, 15) * 10  
             if food not in obstacles and food not in snake:
                 break
+            #Codigo que al comer una fruta aumenta la velocidad de la serpiente
+            if snake_speed > 50: #minimo de velocidad
+                snake_speed -= 5
+                print("Nueva velocidad", snake_speed, "ms")
+                
     elif head == super_food:
         print('Snake comió SUPER comida! Largo:', len(snake) + 2)
         despawn_super_food()  
@@ -83,18 +111,21 @@ def move():
 
     clear()
 
+    #cambio en el codigo para que el color aleatorio sea uniforme durante toda la partida
     for body in snake:
-        square(body.x, body.y, 9, 'black')
+        square(body.x, body.y, 9, snake_color)
+    
+    square(food.x, food.y, 9, fruit_color)
 
-    square(food.x, food.y, 9, 'green')
-
+    #al ser un objeto especial su color será uno en especifo
     square(super_food.x, super_food.y, 9, 'yellow')
 
-    #definir el color del obstaculo
+    #definir el color del obstaculo (un color definido)
     for obs in obstacles:
         square(obs.x, obs.y, 9, 'blue')
     update()
-    ontimer(move, 100)
+    #velocidad final tras comer una fruta
+    ontimer(move, snake_speed) 
     
 #codigo que Muestra las estadísticas del juego al final.
 def show_stats():
@@ -136,5 +167,6 @@ onkey(lambda: change(-10, 0), 'Left')
 onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
 spawn_super_food()
+move_food()
 move()
 done()
