@@ -76,14 +76,16 @@ def move():
         square(obs.x, obs.y, 9, 'blue')
     update()
     ontimer(move, 100)
-
+    
+#codigo que Muestra las estadísticas del juego al final.
 def show_stats():
-    """Muestra las estadísticas de juego al final."""
+    #codigo que cuenta el tiempo total de juego
     game_time = time.time() - start_time
     minutes = int(game_time // 60)
     seconds = int(game_time % 60)
     growth = len(snake) - 1
-    
+
+    #Texto monstrado en la pantalla cuando termina el juego
     clear()
     penup()
     goto(0, 50)
@@ -93,9 +95,13 @@ def show_stats():
     goto(0, 20)
     color('black')
     write(f"Tiempo: {minutes} min {seconds} seg", align="center", font=("Arial", 12, "normal"))
-    
+
+    #Codigo para que el juego no diga "1 puntos" cuando el puntaje sea igual a 1
     goto(0, -10)
-    write(f"Creciente: {growth} unidades", align="center", font=("Arial", 12, "normal"))
+    if (growth == 1):
+        write(f"Puntaje final: {growth} punto", align="center", font=("Arial", 12, "normal"))
+    else:
+        write(f"Puntaje final: {growth} puntos", align="center", font=("Arial", 12, "normal"))
     
     goto(0, -40)
     write(f"Longitud final: {len(snake)}", align="center", font=("Arial", 12, "normal"))
@@ -112,6 +118,7 @@ onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
 move()
 done()
+
 
 
 
