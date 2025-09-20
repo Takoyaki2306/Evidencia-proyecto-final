@@ -6,6 +6,7 @@ import time
 
 food = vector(0, 0)
 snake = [vector(10, 0)]
+#añadimos la fruta extra al juego
 super_food = vector(1000, 1000)
 aim = vector(0, -10)
 start_time = time.time()
@@ -29,14 +30,14 @@ def change(x, y):
     aim.y = y
     
 def spawn_super_food():
-    """Hace aparecer la súper comida en un lugar aleatorio."""
+    #Hace aparecer la súper comida en un lugar aleatorio.
     super_food.x = randrange(-15, 15) * 10
     super_food.y = randrange(-15, 15) * 10
     ontimer(despawn_super_food, 4000) 
     ontimer(spawn_super_food, 12000)  
 
 def despawn_super_food():
-    """Esconde la súper comida (la manda fuera del tablero)."""
+    #Esconde la súper comida (la manda fuera del tablero).
     super_food.x = 1000
     super_food.y = 1000
 
@@ -137,9 +138,3 @@ onkey(lambda: change(0, -10), 'Down')
 spawn_super_food()
 move()
 done()
-
-
-
-
-
-
