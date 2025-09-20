@@ -16,7 +16,7 @@ for i in range (10, 80, 10):
 for i in range (-70, 0, 10):
     obstacles.append(vector(100, i))
 for i in range (-150, -70, 10):
-    obstacles.append(vector(i-100))
+    obstacles.append(vector(i, -100))
 for i in range (-70, 0, 10):
     obstacles.append(vector(i, 50))
     
@@ -42,17 +42,21 @@ def move():
         return
 
 # Definir que es lo que ocurre cuando la serpiente choca con un obstáculo (el juego termina)
-if not inside (head) or head in snake or head in obstacles:
-    square(head.x, head.y, 9, 'red')
-    update()
-    return
+    if not inside (head) or head in snake or head in obstacles:
+        square(head.x, head.y, 9, 'red')
+        update()
+        return
     
     snake.append(head)
 
+   #Cambio en la función para evitar que "food" aparezca en los obstaculos
     if head == food:
         print('Snake:', len(snake))
-        food.x = randrange(-15, 15) * 10
-        food.y = randrange(-15, 15) * 10
+        while True:
+            food.x = randrange(-15, 15) * 10
+            food.y = randrange(-15, 15) * 10
+            if food not in obstacles and food not in snake:
+                break
     else:
         snake.pop(0)
 
@@ -62,6 +66,10 @@ if not inside (head) or head in snake or head in obstacles:
         square(body.x, body.y, 9, 'black')
 
     square(food.x, food.y, 9, 'green')
+
+    #definir el color del obstaculo
+    for obs in obstacles:
+        square(obs.x, obs.y, 9, 'blue')
     update()
     ontimer(move, 100)
 
@@ -76,5 +84,6 @@ onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
 move()
 done()
+
 
 
