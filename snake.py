@@ -96,15 +96,18 @@ def move():
             food.y = randrange(-15, 15) * 10  
             if food not in obstacles and food not in snake:
                 break
-            #Codigo que al comer una fruta aumenta la velocidad de la serpiente
-            if snake_speed > 50: #minimo de velocidad
-                snake_speed -= 5
-                print("Nueva velocidad", snake_speed, "ms")
+        #Codigo que al comer una fruta aumenta la velocidad de la serpiente
+        if snake_speed > 50: #minimo de velocidad
+            snake_speed -= 5
+            print("Nueva velocidad", snake_speed, "ms")
                 
     elif head == super_food:
         print('Snake comió SUPER comida! Largo:', len(snake) + 2)
         despawn_super_food()  
-        snake.append(snake[-1].copy())  
+        snake.append(snake[-1].copy()) 
+        if snake_speed > 50: #minimo de velocidad
+                snake_speed -= 10
+                print("Nueva velocidad", snake_speed, "ms")
 
     else:
         snake.pop(0)
@@ -170,3 +173,4 @@ spawn_super_food()
 move_food()
 move()
 done()
+
