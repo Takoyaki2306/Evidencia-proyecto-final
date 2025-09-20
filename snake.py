@@ -2,10 +2,12 @@
 from random import randrange
 from turtle import *
 from freegames import square, vector
+import time
 
 food = vector(0, 0)
 snake = [vector(10, 0)]
 aim = vector(0, -10)
+start_time = time.time()
 
 # Definir la variable de los obstaculos
 obstacles = []
@@ -39,12 +41,14 @@ def move():
     if not inside(head) or head in snake:
         square(head.x, head.y, 9, 'red')
         update()
+        show_stats()
         return
 
 # Definir que es lo que ocurre cuando la serpiente choca con un obstáculo (el juego termina)
     if not inside (head) or head in snake or head in obstacles:
         square(head.x, head.y, 9, 'red')
         update()
+        show_stats()
         return
     
     snake.append(head)
@@ -73,6 +77,30 @@ def move():
     update()
     ontimer(move, 100)
 
+def show_stats():
+    """Muestra las estadísticas de juego al final."""
+    game_time = time.time() - start_time
+    minutes = int(game_time // 60)
+    seconds = int(game_time % 60)
+    growth = len(snake) - 1
+    
+    clear()
+    penup()
+    goto(0, 50)
+    color('red')
+    write("¡Juego Terminado!", align="center", font=("Arial", 16, "bold"))
+    
+    goto(0, 20)
+    color('black')
+    write(f"Tiempo: {minutes} min {seconds} seg", align="center", font=("Arial", 12, "normal"))
+    
+    goto(0, -10)
+    write(f"Creciente: {growth} unidades", align="center", font=("Arial", 12, "normal"))
+    
+    goto(0, -40)
+    write(f"Longitud final: {len(snake)}", align="center", font=("Arial", 12, "normal"))
+    
+    update()
 
 setup(420, 420, 370, 0)
 hideturtle()
@@ -84,6 +112,7 @@ onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
 move()
 done()
+
 
 
 
